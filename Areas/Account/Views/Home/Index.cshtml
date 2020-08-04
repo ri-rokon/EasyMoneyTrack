@@ -1,0 +1,88 @@
+﻿@model EasyMoneyTrack.ViewModel.IndexView
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+    <div class="text-center">
+        <h1 class="display-4">Welcome</h1>
+        <h2 class="elegantshd">Your Current Blance is  @ViewBag.CurrentBallance.</h2>
+    </div>
+<br />
+<br />
+
+<div class="border row ">
+    <div class="col-6 border-right">
+        <p class="text-info" style="font-size:medium">Saving History</p>
+        <div class="col-9 offset-2">
+            <table class="table ">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Spending.FirstOrDefault().Withdraw)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.Spending.FirstOrDefault().Date)
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Spending)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Withdraw)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Date)
+                            </td>
+
+                            <td>
+                                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        
+    </div>
+    <div class="col-4 ">
+        <p> Spending History</p>
+        <table class="table offset-4">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Saving.FirstOrDefault().Deposit)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Saving.FirstOrDefault().Date)
+                    </th>
+
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Saving)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Deposit)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Date)
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                            <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>

@@ -14,5 +14,6 @@ namespace EasyMoneyTrack.Data
         {
         }
         public DbSet<EasyMoneyTrack.Models.Saving> Saving { get; set; }
+        public DbSet<EasyMoneyTrack.Models.Spending> Spending { get; set; }
     }
 }

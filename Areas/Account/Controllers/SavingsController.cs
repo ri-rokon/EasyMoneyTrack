@@ -94,9 +94,8 @@ namespace EasyMoneyTrack.Areas.Account.Controllers
             {
                 _context.Add(saving);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index","Home");
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", saving.UserId);
             return View(saving);
         }
 

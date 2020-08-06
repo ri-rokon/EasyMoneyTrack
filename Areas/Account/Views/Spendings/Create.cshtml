@@ -4,9 +4,15 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
-
-<h4>Spending</h4>
+@if (ViewBag.cblance != null)
+{
+    <h2 class="alert-info text-center">Your Current Blance is @ViewBag.cblance</h2>
+}
+@if(ViewBag.msg!=null)
+{ 
+<h3>@ViewBag.msg</h3>
+}
+<h4>Withdraw Money</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -22,10 +28,8 @@
                 <input asp-for="Date" class="form-control" />
                 <span asp-validation-for="Date" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <select asp-for="UserId" class ="form-control" asp-items="ViewBag.UserId"></select>
-            </div>
+
+            <input type="hidden" asp-for="UserId" />
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

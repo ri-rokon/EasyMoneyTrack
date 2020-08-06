@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using EasyMoneyTrack.Data;
 using EasyMoneyTrack.Models;
+using System.Security.Claims;
 
 namespace EasyMoneyTrack.Areas.Account.Controllers
 {
@@ -23,8 +24,23 @@ namespace EasyMoneyTrack.Areas.Account.Controllers
         // GET: Account/Spendings
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Spending.Include(s => s.IdentityUser);
-            return View(await applicationDbContext.ToListAsync());
+           
+            
+            var claimIdentity = (ClaimsIdentity)this.User.Identity;
+            var claim = claimIdentity.FindFirst(ClaimTypes.NameIdentifier);
+            if (claim != null)
+            {
+                var applicationDbContext = _context.Spending.Include(s => s.IdentityUser).Where(s => s.UserId == claim.Value);
+                return View(await applicationDbContext.ToListAsync());
+
+            }
+            else
+            {
+                return NotFound();
+            }
+
+
+
         }
 
         // GET: Account/Spendings/Details/5
@@ -49,8 +65,23 @@ namespace EasyMoneyTrack.Areas.Account.Controllers
         // GET: Account/Spendings/Create
         public IActionResult Create()
         {
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id");
-            return View();
+
+            var claimIdentity = (ClaimsIdentity)this.User.Identity;
+            var claim = claimIdentity.FindFirst(ClaimTypes.NameIdentifier);
+            if (claim != null)
+            {
+                Spending model = new Spending()
+                {
+                    Withdraw = 0,
+                    Date = DateTime.Now,
+                    UserId = claim.Value
+                };
+                var currBalance = GetCurrentBlance(claim.Value);
+                ViewBag.cblance = currBalance;
+                return View(model);
+            }
+            return NotFound();
+
         }
 
         // POST: Account/Spendings/Create
@@ -62,11 +93,20 @@ namespace EasyMoneyTrack.Areas.Account.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(spending);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                var claimIdentity = (ClaimsIdentity)this.User.Identity;
+                var claim = claimIdentity.FindFirst(ClaimTypes.NameIdentifier);
+                if (GetCurrentBlance(claim.Value)>= spending.Withdraw)
+                {
+                    _context.Add(spending);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    ViewBag.msg= "You don't have enough money ! ";
+                    return View(spending);
+                }
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Id", spending.UserId);
             return View(spending);
         }
 
@@ -157,5 +197,23 @@ namespace EasyMoneyTrack.Areas.Account.Controllers
         {
             return _context.Spending.Any(e => e.Id == id);
         }
+
+        public double GetCurrentBlance(string id)
+        {
+            Double deposit = 0.0, withDraw = 0.0;
+            var totalDeposit = _context.Saving.Where(u => u.UserId == id).ToList();
+            var toTakWithdraw = _context.Spending.Where(u => u.UserId == id).ToList();
+            foreach (var item in totalDeposit)
+            {
+                deposit += item.Deposit;
+            }
+            foreach (var item in toTakWithdraw)
+            {
+                withDraw += item.Withdraw;
+            }
+            var currentBalance = deposit - withDraw;
+            return currentBalance;
+        }
+
     }
 }

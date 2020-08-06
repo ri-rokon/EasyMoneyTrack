@@ -37,7 +37,7 @@ namespace EasyMoneyTrack.Controllers
                 IndexView modelObject = new IndexView()
                 {
                     Saving=savingList,
-                    Spending=spendingList,
+                    Spending=spendingList
                 };
 
                 ViewBag.CurrentBallance = GetCurrentBlance(Claim.Value);

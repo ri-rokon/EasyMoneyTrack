@@ -12,8 +12,19 @@
 
 <div class="border row ">
     <div class="col-6 border-right">
-        <p class="text-info" style="font-size:medium">Saving History</p>
-        <div class="col-9 offset-2">
+        <div class="row">
+            
+                <div class="col-6">
+                    <h4 class="alert-info">Spenging History</h4>
+                </div>
+                <div class="col-6 text-right">
+                    <a asp-area="Account" asp-controller="Spendings" asp-action="Create" class="btn btn-info">Withdraw</a>
+                </div>
+
+           
+        </div>
+        <br />
+        <br />
             <table class="table ">
                 <thead>
                     <tr>
@@ -46,12 +57,20 @@
                     }
                 </tbody>
             </table>
-        </div>
-        
     </div>
-    <div class="col-4 ">
-        <p> Spending History</p>
-        <table class="table offset-4">
+    <div class="col-6">
+        <div class="row">
+            <div class="col-6">
+                <h4 class="alert-info">Saving History</h4>
+            </div>
+            <div class="col-6 text-right">
+                <a asp-area="Account" asp-controller="Savings" asp-action="Create" class="btn btn-info">Deposit</a>
+            </div>
+
+        </div>
+       <br />
+       <br />
+        <table class="table ">
             <thead>
                 <tr>
                     <th>

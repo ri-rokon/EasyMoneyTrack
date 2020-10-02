@@ -1,0 +1,11 @@
+﻿@model IEnumerable<EasyMoneyTrack.Models.Transaction>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2><i class=""></i>Transection History</h2>
+<div id="view-all">
+    @await Html.PartialAsync("_ViewAll",Model) 
+</div>
+
